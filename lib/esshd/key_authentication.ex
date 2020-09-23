@@ -6,14 +6,12 @@ defmodule Sshd.KeyAuthentication do
   alias Sshd.Sessions
   require Record
 
-  Record.defrecord :RSAPublicKey,  Record.extract(:RSAPublicKey, from_lib: "public_key/include/public_key.hrl")
-  Record.defrecord :RSAPrivateKey, Record.extract(:RSAPrivateKey, from_lib: "public_key/include/public_key.hrl")
-  Record.defrecord :DSAPrivateKey, Record.extract(:DSAPrivateKey, from_lib: "public_key/include/public_key.hrl")
-  Record.defrecord :'Dss-Parms',   Record.extract(:'Dss-Parms', from_lib: "public_key/include/public_key.hrl")
+  Record.defrecord :RSAPublicKey,  Record.extract(:RSAPublicKey, from_lib: "public_key/include/OTP-PUB-KEY.hrl")
+  Record.defrecord :RSAPrivateKey, Record.extract(:RSAPrivateKey, from_lib: "public_key/include/OTP-PUB-KEY.hrl")
 
   @type public_key :: :public_key.public_key()
   @type private_key :: map | map | term
-  @type public_key_algorithm :: :'ssh-rsa'| :'ssh-dss' | atom
+  @type public_key_algorithm :: :'ssh-rsa'| :'ssh-ed25519' | atom
   @type user :: charlist()
   @type daemon_options :: Keyword.t
 
@@ -49,13 +47,13 @@ defmodule Sshd.KeyAuthentication do
   defp file_base_name(:"rsa-sha2-256"), do: "ssh_host_rsa_key"
   defp file_base_name(:"rsa-sha2-384"), do: "ssh_host_rsa_key"
   defp file_base_name(:"rsa-sha2-512"), do: "ssh_host_rsa_key"
-  defp file_base_name(:"ssh-dss"), do: "ssh_host_dsa_key"
+  defp file_base_name(:"ssh-ed25519"), do: "ssh_host_ed25519_key"
   defp file_base_name(:"ecdsa-sha2-nistp256"), do: "ssh_host_ecdsa_key"
   defp file_base_name(:"ecdsa-sha2-nistp384"), do: "ssh_host_ecdsa_key"
   defp file_base_name(:"ecdsa-sha2-nistp521"), do: "ssh_host_ecdsa_key"
   defp file_base_name(_), do: "ssh_host_key"
 
-  defp identity_pass_phrase("ssh-dss"), do: :dsa_pass_phrase
+  defp identity_pass_phrase("ssh-ed25519"), do: :ed25519_pass_phrase
   defp identity_pass_phrase("ssh-rsa"), do: :rsa_pass_phrase
   defp identity_pass_phrase("rsa-sha2-256"), do: :rsa_pass_phrase
   defp identity_pass_phrase("rsa-sha2-384"), do: :rsa_pass_phrase
